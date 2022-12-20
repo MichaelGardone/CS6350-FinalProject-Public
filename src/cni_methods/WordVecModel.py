@@ -452,7 +452,7 @@ class WordVecModel():
                     copygraph.add_edge(e, e12[1])
 
                     # if no cycle was found, did we make MSGE better?
-                    if len(nx.simple_cycles(copygraph)) == 0:
+                    if len(list(nx.simple_cycles(copygraph))) == 0:
                         ndg = msge.compute_DG(copygraph, DN)
                         nerr = msge.compute_MSGE(DN, ndg, P, len(P))
 

@@ -27,7 +27,6 @@ def main():
     # Purity
     total, per_cluster = wv_model.get_purity(gold)
     
-    print("NOTE: 1.0 means a pure cluster, 0.0 indicates an entirely impure cluster!")
     print("Total Purity:", total)
     for i in per_cluster:
         print(f"\tCluster {i}: {per_cluster[i]}")
