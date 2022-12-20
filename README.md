@@ -16,4 +16,4 @@ python src/main.py
 
 or
 
-bash run.bsh
+bash run.sh
