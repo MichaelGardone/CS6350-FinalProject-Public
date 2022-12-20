@@ -16,11 +16,11 @@ def main():
 
     wv_model = WVM.WordVecModel(debug=True)
 	
-    # wv_model.generate_temporal_structure("stories/movie/reduced/reducedMovie.story", parser)
-    # gold = fr.parse_gold("stories/movie/reduced/movieSemanticGold.gold")
+    wv_model.generate_temporal_structure("stories/movie/reduced/reducedMovie.story", parser)
+    gold = fr.parse_gold("stories/movie/reduced/movieSemanticGold.gold")
 	
-    wv_model.generate_temporal_structure("stories/simple/RtSimpleStories.story", parser)
-    gold = fr.parse_gold("stories/simple/RtSimpleGold.gold")
+    # wv_model.generate_temporal_structure("stories/simple/RtSimpleStories.story", parser)
+    # gold = fr.parse_gold("stories/simple/RtSimpleGold.gold")
 	
     print("Finished")
 
