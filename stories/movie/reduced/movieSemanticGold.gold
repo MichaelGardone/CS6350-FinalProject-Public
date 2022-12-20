@@ -1,0 +1,74 @@
+@ look for movie
+17 John and Sally look for the movie .
+18 John and Sally find the movie .
+###
+@ walk into theater
+27 John and Sally walk into the auditorium .
+###
+@ enter
+4 John and Sally enter the dark theater .
+###
+@ get in line box office
+12 John and Sally get in line for the movie ticket .
+0 John and Sally wait in line for ticket .
+24 Sally and John stand in line at the movie theater .
+14 John and Sally get in line for popcorn .
+###
+@ buy tickets
+1 John purchases two movie ticket .
+13 John and Sally buy the ticket .
+25 John purchases two ticket from the clerk for the four oclock show .
+###
+@ enter concession
+2 John and Sally walk up to the concession stand .
+###
+@ buy popcorn
+3 John buys Sally a large popcorn .
+15 John and Sally buy popcorn .
+26 Sally buys popcorn and an orange soda .
+###
+@ walk corridor hall
+16 John and Sally walk down the theater corridor .
+###
+@ find search for seats
+20 John and Sally find their seat .
+5 Sally chooses seat at the front of the auditorium .
+###
+@ take seat
+28 John and Sally take their seat in the fifth row .
+###
+@ sit down
+21 John and Sally sit down .
+###
+@ bored by trailers
+8 John is bored during come attraction .
+###
+@ complain about advertisements
+51 John and Sally complain about the advertisement .
+###
+@ wait for movie
+158 John and Sally wait for the movie to start .
+###
+@ turn off cellphone
+6 John turns off the cellphone .
+###
+@ eat popcorn
+7 Sally eats the popcorn .
+###
+@ watch movie
+22 John and Sally watch the movie .
+30 John and Sally watch the movie .
+###
+@ laugh at movie
+9 John and Sally laugh during the movie .
+###
+@ surprised by ending
+10 Sally is surprised by the movie ending .
+###
+@ clap applaud movie
+31 John and Sally clap at the end of the movie .
+###
+@ leave movie
+11 Sally and John leave when the movie finish .
+23 John and Sally leave the movie theater .
+###

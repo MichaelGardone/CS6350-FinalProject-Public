@@ -1,0 +1,230 @@
+# os
+import os
+from collections import defaultdict
+from copy import deepcopy
+
+# third party
+import spacy, numpy
+from spacy.vectors import Vectors
+from sklearn.cluster import OPTICS
+from pyvis.network import Network
+import networkx as nx
+from scipy.special import comb
+
+# my code
+from cni_methods import WordVecModel as WVM
+from cni_methods import StanzaModel as SM
+from util import msge as msge
+#TFIDF = term frequency inverse document frequency
+
+def main():
+    # TODO: Change the model
+    parser = spacy.load('en_core_web_md')
+
+    wv_model = WVM.WordVecModel(debug=True)
+    wv_model.generate_temporal_structure("stories/movie/reducedMovie.story", parser)
+    # wv_model.generate_temporal_structure("stories/restaurant/RtSimpleStories.story", parser)
+    print("Finished")
+
+    print("Normative Distances of Stories")
+    DN = msge.compute_DN(wv_model._stories, wv_model._clusters)
+
+    for key in DN.keys():
+        print(key, "=", DN[key])
+
+    print("Normative Distance of Events")
+    DG = msge.compute_DG(wv_model._graph, DN)
+
+    for key in DG.keys():
+        print(key, "=", DG[key])
+    
+    print("Mean Squared Graph Error")
+    P  = [e[0] for e in DG]
+    error = msge.compute_MSGE(DN, DG, P, len(DN.keys()))
+    print(f"MSGE Error: {error}")
+
+    Q = {}
+    for key in DN.keys():
+        pass
+
+    # TODO: Fix
+    # DG = msge.compute_DG(wv_model._graph, DN)
+
+    # stories = [["John and Sally waited in line for ticket", "John purchased two movie ticket"], ["John and Sally got in line for the movie ticket", "John and Sally walked up to the concession stand"]]
+    # stories = parse_file("stories/movie/reducedMovie.story")
+    # stories = fr.parse_file("stories/restaurant/RtSimpleStories.story")
+
+    # produces N 1xN arrays (where N is the number of lines total across all stories)
+    # similarities = sentence_similarities(parser, stories)
+    # print("--------averages--------")
+    # print(similarities)
+
+    # translation into numpy
+    # sim_vstack = numpy.vstack(similarities)
+
+    # parsed = parse_stories(parser, stories)
+    # similarities = sentence_similarities2(parsed)
+    # print(similarities)
+
+    # translation into numpy
+    # sims = []
+    # for i in range(len(similarities)):
+    #     for j in range(len(similarities[i])):
+    #         sims.append(similarities[i][j])
+    # sim_vstack = numpy.vstack(sims)
+
+    # print(sim_vstack)
+
+    # clusterer = OPTICS(min_samples=float(0.025), xi=0.05)
+    # clusterer.fit(sim_vstack)
+
+    """
+        -1 indicates no placement for the sentence/no cluster.
+    """
+    # predictions = clusterer.fit_predict(sim_vstack)
+    # print(predictions)
+
+    # clusters = {int(key): [] for key in predictions}
+    # print(clusters)
+
+    # flattened_sents = [(sent, story_i) for story_i in range(len(stories)) for sent in stories[story_i]]
+
+    # for i, sent in enumerate(flattened_sents):
+    #     clusters[predictions[i]].append(sent)
+
+    # for key in clusters:
+    #     output = "Cluster " + str(key) + "\n"
+    #     for val in clusters[key]:
+    #         output += "\t" + val[0] + " (in story" + val[1] + ")" + "\n"
+    #     print(output)
+
+    # plotgraph = nx.DiGraph()
+    # plotgraph.add_nodes_from(clusters.keys())
+
+    # confidence_threshold = 0.5
+    # confidence_library = {}
+
+    # for e1 in clusters.keys():
+        
+    #     e1_cluster = clusters[e1]
+
+    #     for e2 in clusters.keys():
+    #         if plotgraph.has_edge(e1, e2): # no duplicate edges
+    #             continue
+    #         if e1 == e2: # self-loop prevention
+    #             continue
+            
+    #         e2_cluster = clusters[e2]
+            
+    #         n = 0 # number of observations supporting support either before(e1,e2) or before(e2,e1)
+    #         k = 0 # number of observations supporting before(e1,e2)
+
+    #         for s1 in e1_cluster:
+    #             for s2 in e2_cluster:
+    #                 # ignore if s1 and s2 are not in the same story
+    #                 if s1[1] != s2[1]:
+    #                     continue
+                    
+    #                 # before(e1, e2) found
+    #                 if stories[s1[1]].index(s1[0]) < stories[s1[1]].index(s2[0]):
+    #                     n += 1
+    #                     k += 1
+    #                 # before(e2, e1) found
+    #                 else:
+    #                     n += 1
+            
+    #         confidence = 0
+    #         exp = 2 ** n
+    #         for i in range(k):
+    #             confidence += comb(n, i) * 1 / exp
+            
+    #         # output = "Confidence " + str(e1) + " < " + str(e2) + ": " + str(confidence) + " (" + ("before(e1,e2)" if confidence >= confidence_threshold else "before(e2,e1)") + ")"
+    #         # print(output)
+
+    #         # if confidence is passed, add before(e1, e2)
+    #         if confidence >= confidence_threshold:
+    #             plotgraph.add_edge(e1, e2)
+    #             confidence_library[(e1,e2)] = confidence
+            # otherwise, always add before(e2, e1)
+            # TODO: Feels like this should be a nCq, where q is the count of supporting before(e2,e1)
+            # This else branch is too strong of a commitment, see above for a fix
+            # else:
+            #     plotgraph.add_edge(e2, e1)
+            #     confidence_library[(e2,e1)] = confidence
+            # low confidence edges will be removed!
+
+    # this initial graph is ugly
+    # drawGraph(plotgraph, "plotgraph.html")
+
+    # slimgraph = deepcopy(plotgraph)
+    # loops = nx.simple_cycles(slimgraph)
+
+    # for loop in loops:
+    #     # print(loop)
+    #     min_conf = 1000
+    #     min_pair = ()
+    #     #find least confident edge and remove it
+    #     for i, node in enumerate(loop):
+    #         if i + 1 < len(loop):
+    #             if confidence_library[(loop[i], loop[i+1])] < min_conf:
+    #                 min_conf = confidence_library[(loop[i], loop[i+1])]
+    #                 min_pair = (node, loop[i+1])
+    #         else:
+    #             if confidence_library[(loop[i], loop[0])] < min_conf:
+    #                 min_conf = confidence_library[(loop[i], loop[0])]
+    #                 min_pair = (node, loop[0])
+        
+    #     if slimgraph.has_edge(min_pair[0], min_pair[1]):
+    #         slimgraph.remove_edge(min_pair[0], min_pair[1])
+
+    # drawGraph(slimgraph, "slimgraph.html")
+    # print(slimgraph.get_edges())
+
+    return 0
+    
+###
+
+if __name__ == "__main__":
+    main()
+
+    # print("Normative Distances of Stories")
+    # DN = msge.compute_DN(wv_model._stories, wv_model._clusters)
+
+    # for key in DN.keys():
+    #     print(key, "=", DN[key])
+
+    # print("Normative Distance of Graph Nodes")
+    # DG = msge.compute_DG(wv_model._graph, DN)
+
+    # for key in DG.keys():
+    #     print(key, "=", DG[key])
+    
+    # print("Mean Squared Graph Error")
+    # P  = []
+    # for e in DN:
+    #     if e[0] not in P:
+    #         P.append(e[0])
+    # error = msge.compute_MSGE(DN, DG, P, len(DN.keys()))
+    # print(f"MSGE Error: {error}")
+
+    # # Q := all of events (e1, e2) such that e2 is reachable from e1 or unordered
+    # Q = DN.keys() # << all potential orderings, including not in the graph
+    # Q = sorted(Q, key=lambda e: DN[e] - DG[e], reverse=True)
+    # events = wv_model._clusters
+    
+    # graph = deepcopy(wv_model._graph)
+
+    # # foreach (e1, e2) ∈ Q in order of decreasing DN(e1, e2) – DG(e1, e2) do:
+    # for e12 in Q:
+    # #   E := the set of event ei that satisfy DG(e1, ei) = DN(e1, e2) – 1 
+    #     E = [e for e in events if e != e12[0] and DG[(e12[0], e)] == DN[e12] - 1]
+    # #   foreach ei ∈ E do:
+    #     for e in E:
+    #         # If edge ei → e2 is not in the graph and adding it to the graph will not create a cycle do:
+    #         copygraph = deepcopy(graph)
+    #         if nx.has_path(wv_movel._graph, e, e12[1]) == False:
+    #             # Add ei → e2 to the graph
+    #             copygraph.add_edge(e, e12[1])
+    #             if len(nx.simple_cycles(copygraph)) == 0:
+    #                 graph = copygraph
+    # return graph --> graph is an object and directly modified
