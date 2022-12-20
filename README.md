@@ -18,3 +18,5 @@ python src/main.py
 or
 
 bash run.sh
+
+If there are any issues, please let me know through Canvas and I will get back to you ASAP!
